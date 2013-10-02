@@ -28,4 +28,16 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $bool = $this->page->exist();
       $this->assertFalse($bool);
    }
+
+   public function testValid() {
+      $this->page->setUrl("http://www.nourdine.net");
+      $bool = $this->page->valid();
+      $this->assertTrue($bool);
+   }
+
+   public function testValidWithQueryString() {
+      $this->page->setUrl("http://www.nourdine.net?a=1&b=2");
+      $bool = $this->page->valid();
+      $this->assertTrue($bool);
+   }
 }

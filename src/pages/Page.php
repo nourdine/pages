@@ -19,8 +19,19 @@ class Page {
    }
 
    public function exist() {
-      $headers = get_headers($this->url);
-      $status = $headers[0];
-      return strpos($status, "200") !== false;
+      $headers = @get_headers($this->url);
+      if ($headers === false) {
+         return $headers;
+      } else {
+         $status = $headers[0];
+         return strpos($status, "200") !== false;
+      }
+   }
+
+   public function valid() {
+      if (filter_var($this->url, FILTER_VALIDATE_URL) === false) {
+         return false;
+      }
+      return true;
    }
 }
