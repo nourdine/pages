@@ -2,26 +2,42 @@
 
 namespace pages;
 
+use regular\Regular;
+
 class Page {
 
    protected $url = null;
    protected $content = null;
 
-   protected function getTagValue($html, $tagName) {
-      $matches = array();
-      $pattern = "/<$tagName ?.*>(.*)<\/$tagName>/";
-      preg_match($pattern, $html, $matches);
-      return $matches[1];
-   }
-
    protected function fetchContent() {
       if ($this->content == null) {
-         $this->content = file_get_contents($this->url);
+         $tmp = @file_get_contents($this->url);
+         if ($tmp === false) { // network error!
+            $this->content = "";
+         } else {
+            $this->content = $tmp;
+         }
       }
+      return $this->content;
+   }
+
+   protected function hasProtocol($url) {
+      if (strpos($url, "http://") === 0 ||
+         strpos($url, "https://") === 0) {
+         return true;
+      }
+      return false;
+   }
+
+   protected function addProtocol($url) {
+      if (!$this->hasProtocol($url)) {
+         $url = "http://" . $url;
+      }
+      return $url;
    }
 
    public function __construct($url = null) {
-      $this->url = $url;
+      $this->url = $this->addProtocol($url);
    }
 
    public function getUrl() {
@@ -29,12 +45,12 @@ class Page {
    }
 
    public function setUrl($url) {
-      $this->url = $url;
+      $this->url = $this->addProtocol($url);
    }
 
    public function doesExist() {
       $headers = @get_headers($this->url);
-      if ($headers === false) {
+      if ($headers === false) { // network error!
          return $headers;
       } else {
          $status = $headers[0];
@@ -50,12 +66,14 @@ class Page {
    }
 
    public function getTitle() {
-      $this->fetchContent();
-      return $this->getTagValue($this->content, "title");
+      $re = new Regular("/<title ?.*>(.*)<\/title>/");
+      $title = $re->match($this->fetchContent())->getCaptured(0);
+      return trim($title);
    }
 
    public function getDescription() {
-      $this->fetchContent();
-      // ...
+      $re = new Regular('<meta name="description".{0,}content="([^"]{1,})">');
+      $description = $re->match($this->fetchContent())->getCaptured(0);
+      return trim($description);
    }
 }

@@ -5,13 +5,14 @@
    "keywords": ["html curl xml"],
    "license": "GNU GPL v3",
    "authors": [
-   {
-      "name": "fabs aka (nourdine)",
-      "email": "ftestolin@gmail.com"
-   }
+      {
+         "name": "fabs aka (nourdine)",
+         "email": "ftestolin@gmail.com"
+      }
    ],
    "require": {
-      "php": ">=5.3"
+      "php": ">=5.3",
+      "nourdine/regular": "dev-master"
    },
    "autoload": {
       "psr-0": {
