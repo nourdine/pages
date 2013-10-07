@@ -87,6 +87,10 @@ class Page {
       }
    }
 
+   public function hasNotes() {
+      return count($this->notes) > 0;
+   }
+
    public function getNotes() {
       return $this->notes;
    }
@@ -107,15 +111,13 @@ class Page {
     * The page title or an empty string (title missing).
     * 
     * @throws \RuntimeException
-    * @return string
+    * @return string|null
     */
    public function getTitle() {
-      try {
-         $re = new Regular("/<title ?.*>(.*)<\/title>/i");
-         $title = $re->match($this->fetchContent())->getCaptured(0);
-         return trim($title);
-      } catch (\RuntimeException $ex) {
-         return "";
+      $re = new Regular("/<title ?.*>(.*)<\/title>/i");
+      $matches = $re->match($this->fetchContent());
+      if ($matches->isSuccess()) {
+         return trim($matches->getCaptured(0));
       }
    }
 
@@ -123,15 +125,13 @@ class Page {
     * The page description or an empty string (description missing). 
     * 
     * @throws \RuntimeException
-    * @return string
+    * @return string|null
     */
    public function getDescription() {
-      try {
-         $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
-         $description = $re->match($this->fetchContent())->getCaptured(0);
-         return trim($description);
-      } catch (\RuntimeException $ex) {
-         return "";
+      $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
+      $matches = $re->match($this->fetchContent());
+      if ($matches->isSuccess()) {
+         return trim($matches->getCaptured(0));
       }
    }
 }
