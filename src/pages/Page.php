@@ -6,8 +6,22 @@ use regular\Regular;
 
 class Page {
 
+   const REDIRECT_REQUIRED = "302";
+
    protected $url = null;
    protected $content = null;
+   protected $notes = array();
+   protected $dictionary = array(
+      "302" => "A redirect has been required"
+   );
+
+   protected function isFoundStatusCode($str) {
+      return strpos($str, "302") !== false;
+   }
+
+   protected function isOKStatusCode($str) {
+      return strpos($str, "200") !== false;
+   }
 
    protected function fetchContent() {
       if ($this->content == null) {
@@ -36,6 +50,10 @@ class Page {
       return $url;
    }
 
+   protected function addPageNote($code) {
+      $this->notes[] = new Note($this->dictionary[$code]);
+   }
+
    public function __construct($url = null) {
       $this->url = $this->addProtocol($url);
    }
@@ -48,32 +66,69 @@ class Page {
       $this->url = $this->addProtocol($url);
    }
 
+   /**
+    * Check whether a remote page exists or not.
+    * 
+    * @return boolean
+    */
    public function doesExist() {
       $headers = @get_headers($this->url);
-      if ($headers === false) { // network error!
-         return $headers;
+      if ($headers === false) {
+         throw new \RuntimeException("A network error occurred");
       } else {
          $status = $headers[0];
-         return strpos($status, "200") !== false;
+         $_200_ = $this->isOKStatusCode($status);
+         $_302_ = $this->isFoundStatusCode($status);
+         if ($_302_) {
+            $this->addPageNote(self::REDIRECT_REQUIRED);
+         }
+         return $_200_;
       }
    }
 
-   public function hasValidLocation() {
+   public function getNotes() {
+      return $this->notes;
+   }
+
+   /**
+    * Check whether the page url is valid or not.
+    * 
+    * @return boolean
+    */
+   public function isLocationValid() {
       if (filter_var($this->url, FILTER_VALIDATE_URL) === false) {
          return false;
       }
       return true;
    }
 
+   /**
+    * The page title or an empty string (title missing).
+    * 
+    * @return string
+    */
    public function getTitle() {
-      $re = new Regular("/<title ?.*>(.*)<\/title>/");
-      $title = $re->match($this->fetchContent())->getCaptured(0);
-      return trim($title);
+      try {
+         $re = new Regular("/<title ?.*>(.*)<\/title>/i");
+         $title = $re->match($this->fetchContent())->getCaptured(0);
+         return trim($title);
+      } catch (\RuntimeException $ex) {
+         return "";
+      }
    }
 
+   /**
+    * The page description or an empty string (description missing). 
+    * 
+    * @return string
+    */
    public function getDescription() {
-      $re = new Regular('<meta name="description".{0,}content="([^"]{1,})">');
-      $description = $re->match($this->fetchContent())->getCaptured(0);
-      return trim($description);
+      try {
+         $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
+         $description = $re->match($this->fetchContent())->getCaptured(0);
+         return trim($description);
+      } catch (\RuntimeException $ex) {
+         return "";
+      }
    }
 }

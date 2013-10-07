@@ -12,7 +12,7 @@ class PageTest extends PHPUnit_Framework_TestCase {
    protected $page = null;
 
    public function setUp() {
-      $this->page = new Page();
+      $this->page = new Page(self::WORKING_URL);
    }
 
    public function tearDown() {
@@ -31,21 +31,25 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertTrue($bool);
    }
 
+   /**
+    * This will prolly redirect
+    */
    public function testNotExist() {
-      $this->page->setUrl("http://www.no-no-no-no-no.com");
+      $this->page->setUrl("http://www.not_exisisting_but_prolly_redirected_by_ISP.com");
       $bool = $this->page->doesExist();
       $this->assertFalse($bool);
+      $this->assertEquals(1, count($this->page->getNotes()));
    }
 
    public function testValid() {
       $this->page->setUrl(self::WORKING_URL);
-      $bool = $this->page->hasValidLocation();
+      $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);
    }
 
    public function testValidWithQueryString() {
       $this->page->setUrl(self::WORKING_URL . "?a=1&b=2");
-      $bool = $this->page->hasValidLocation();
+      $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);
    }
 
