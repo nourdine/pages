@@ -2,8 +2,6 @@
 
 include_once '../vendor/autoload.php';
 
-ini_set('default_socket_timeout', 4);
-
 $get = function($url) {
       try {
          $page = new \pages\Page($url);

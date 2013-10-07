@@ -69,6 +69,7 @@ class Page {
 
    /**
     * Check whether a remote page exists or not.
+    * To be used before Page::getTitle and Page::getDescription to male sure the wanted page actually exists.
     * 
     * @throws \RuntimeException
     * @return boolean
@@ -109,7 +110,7 @@ class Page {
    }
 
    /**
-    * The page title or an empty string (title missing).
+    * Fetch the page title or an empty string (title missing).
     * 
     * @throws \RuntimeException
     * @return string|null
@@ -123,7 +124,7 @@ class Page {
    }
 
    /**
-    * The page description or an empty string (description missing). 
+    * Fetch the page description or an empty string (description missing). 
     * 
     * @throws \RuntimeException
     * @return string|null
