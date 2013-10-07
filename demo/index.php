@@ -24,7 +24,6 @@ $get = function($url) {
       }
    };
 
-
 $get("www.yahoo.com");
 $get("https://www.google.com"); // redirecting
 $get("https://www.nourdine.net/article/10");
