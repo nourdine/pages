@@ -4,7 +4,9 @@ use pages\Page;
 
 class PageTest extends PHPUnit_Framework_TestCase {
 
-   const WORKING_URL = "http://www.blog.local";
+   const EXISTING_URL = "http://pages.ws.local/exist.php";
+   const NON_EXISTING = "http://pages.ws.local/not.php";
+   const REDIRECTING_URL = "http://pages.ws.local/redirect.php";
 
    /**
     * @var pages\Page
@@ -12,58 +14,62 @@ class PageTest extends PHPUnit_Framework_TestCase {
    protected $page = null;
 
    public function setUp() {
-      $this->page = new Page(self::WORKING_URL);
+      $this->page = new Page(self::EXISTING_URL);
    }
 
    public function tearDown() {
       $this->page = null;
    }
 
-   public function testExist() {
-      $this->page->setUrl(self::WORKING_URL);
+   public function testExisting() {
+      $this->page->setUrl(self::EXISTING_URL);
       $bool = $this->page->doesExist();
       $this->assertTrue($bool);
    }
 
-   public function testExistButNoProtocalSpecified() {
-      $this->page->setUrl("www.blog.local");
+   public function testExistingButNoProtocalSpecified() {
+      $this->page->setUrl("pages.ws.local/exist.php");
       $bool = $this->page->doesExist();
       $this->assertTrue($bool);
    }
 
-   /**
-    * This will prolly redirect
-    */
-   public function testNotExist() {
-      $this->page->setUrl("http://www.not_exisisting_but_prolly_redirected_by_ISP.com");
+   public function testRedirecting() {
+      $this->page->setUrl(self::REDIRECTING_URL);
       $bool = $this->page->doesExist();
       $this->assertFalse($bool);
       $this->assertEquals(1, count($this->page->getNotes()));
    }
 
+   public function testNonExisting() {
+      $this->page->setUrl(self::NON_EXISTING);
+      $bool = $this->page->doesExist();
+      $this->assertFalse($bool);
+      $this->assertEquals(0, count($this->page->getNotes()));
+   }
+
    public function testValid() {
-      $this->page->setUrl(self::WORKING_URL);
+      $this->page->setUrl(self::EXISTING_URL);
       $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);
    }
 
    public function testValidWithQueryString() {
-      $this->page->setUrl(self::WORKING_URL . "?a=1&b=2");
+      $this->page->setUrl(self::EXISTING_URL . "?a=1&b=2");
       $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);
    }
 
    public function testGetTitle() {
-      $expected = "Nourdine's website - another damn resource on web programming and bla bla bla ;-)";
-      $this->page->setUrl(self::WORKING_URL);
+      $expected = "TITLE";
+      $this->page->setUrl(self::EXISTING_URL);
       $title = $this->page->getTitle();
       $this->assertEquals($expected, $title);
    }
 
    public function testGetDescription() {
-      $expected = "Nourdine's website - another damn resource on programming and bla bla bla ;-)";
-      $this->page->setUrl(self::WORKING_URL);
-      $title = $this->page->getDescription();
-      $this->assertEquals($expected, $title);
+      $expected = "DESCRIPTION";
+      $this->page->setUrl(self::EXISTING_URL);
+      $description = $this->page->getDescription();
+      $this->assertEquals($expected, $description);
    }
 }
