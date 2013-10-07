@@ -7,6 +7,7 @@ class PageTest extends PHPUnit_Framework_TestCase {
    const EXISTING_URL = "http://pages.ws.local/exist.php";
    const NON_EXISTING = "http://pages.ws.local/not.php";
    const REDIRECTING_URL = "http://pages.ws.local/redirect.php";
+   const TAKING_LONG_TIME_URL = "http://pages.ws.local/taking_long_time.php";
 
    /**
     * @var pages\Page
@@ -47,13 +48,21 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertEquals(0, count($this->page->getNotes()));
    }
 
-   public function testValid() {
+   /**
+    * @expectedException RuntimeException
+    */
+   public function testTakingLongTimeToRespond() {
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
+      $bool = $this->page->doesExist();
+   }
+
+   public function testIsLocationValid() {
       $this->page->setUrl(self::EXISTING_URL);
       $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);
    }
 
-   public function testValidWithQueryString() {
+   public function testIsLocationValidWithQueryString() {
       $this->page->setUrl(self::EXISTING_URL . "?a=1&b=2");
       $bool = $this->page->isLocationValid();
       $this->assertTrue($bool);

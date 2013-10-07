@@ -55,6 +55,7 @@ class Page {
    }
 
    public function __construct($url = null) {
+      ini_set('default_socket_timeout', 2);
       $this->url = $this->addProtocol($url);
    }
 
