@@ -88,8 +88,7 @@ class Page {
    }
 
    /**
-    * Check whether a remote page exists or not.
-    * 
+    * Check whether a remote page exists or not.    * 
     * To be used before Page::getTitle and Page::getDescription to male sure the wanted page actually exists.
     * 
     * @throws \RuntimeException
