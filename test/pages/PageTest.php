@@ -15,45 +15,11 @@ class PageTest extends PHPUnit_Framework_TestCase {
    protected $page = null;
 
    public function setUp() {
-      $this->page = new Page(self::EXISTING_URL);
+      $this->page = new Page();
    }
 
    public function tearDown() {
       $this->page = null;
-   }
-
-   public function testExisting() {
-      $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->checkExistence();
-      $this->assertTrue($bool);
-   }
-
-   public function testExistingButNoProtocalSpecified() {
-      $this->page->setUrl("pages.ws.local/exist.php");
-      $bool = $this->page->checkExistence();
-      $this->assertTrue($bool);
-   }
-
-   public function testRedirecting() {
-      $this->page->setUrl(self::REDIRECTING_URL);
-      $bool = $this->page->checkExistence();
-      $this->assertFalse($bool);
-      $this->assertEquals(1, count($this->page->getNotes()));
-   }
-
-   public function testNonExisting() {
-      $this->page->setUrl(self::NON_EXISTING);
-      $bool = $this->page->checkExistence();
-      $this->assertFalse($bool);
-      $this->assertEquals(0, count($this->page->getNotes()));
-   }
-
-   /**
-    * @expectedException RuntimeException
-    */
-   public function testTakingLongTimeToRespond() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $bool = $this->page->checkExistence();
    }
 
    public function testIsLocationFormallyValid() {
@@ -68,6 +34,40 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertTrue($bool);
    }
 
+   public function testCheckExistence_existing() {
+      $this->page->setUrl(self::EXISTING_URL);
+      $bool = $this->page->checkExistence();
+      $this->assertTrue($bool);
+   }
+
+   public function testCheckExistence_no_protocol_specified() {
+      $this->page->setUrl("pages.ws.local/exist.php");
+      $bool = $this->page->checkExistence();
+      $this->assertTrue($bool);
+   }
+
+   public function testCheckExistence_redirecting() {
+      $this->page->setUrl(self::REDIRECTING_URL);
+      $bool = $this->page->checkExistence();
+      $this->assertFalse($bool);
+      $this->assertEquals(1, count($this->page->getNotes()));
+   }
+
+   public function testCheckExistence_non_existing() {
+      $this->page->setUrl(self::NON_EXISTING);
+      $bool = $this->page->checkExistence();
+      $this->assertFalse($bool);
+      $this->assertEquals(0, count($this->page->getNotes()));
+   }
+
+   /**
+    * @expectedException RuntimeException
+    */
+   public function testCheckExistence_taking_long_time() {
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
+      $bool = $this->page->checkExistence();
+   }
+
    public function testGetTitle() {
       $expected = "TITLE";
       $this->page->setUrl(self::EXISTING_URL);
@@ -75,10 +75,26 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertEquals($expected, $title);
    }
 
+   /**
+    * @expectedException RuntimeException
+    */
+   public function testGetTitle_taking_long_time() {
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
+      $title = $this->page->getTitle();
+   }
+
    public function testGetDescription() {
       $expected = "DESCRIPTION";
       $this->page->setUrl(self::EXISTING_URL);
       $description = $this->page->getDescription();
       $this->assertEquals($expected, $description);
+   }
+
+   /**
+    * @expectedException RuntimeException
+    */
+   public function testGetDescription_taking_long_time() {
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
+      $title = $this->page->getDescription();
    }
 }

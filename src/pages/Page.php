@@ -26,8 +26,8 @@ class Page {
    protected function fetchContent() {
       if ($this->content == null) {
          $tmp = @file_get_contents($this->url);
-         if ($tmp === false) { // network error!
-            $this->content = "";
+         if ($tmp === false) {
+            throw new \RuntimeException("A network error occurred");
          } else {
             $this->content = $tmp;
          }
@@ -54,8 +54,8 @@ class Page {
       $this->notes[] = new Note($this->dictionary[$code]);
    }
 
-   public function __construct($url = null) {
-      ini_set('default_socket_timeout', 2);
+   public function __construct($url = null, $timeout = 1) {
+      ini_set("default_socket_timeout", $timeout);
       $this->url = $this->addProtocol($url);
    }
 
@@ -65,28 +65,6 @@ class Page {
 
    public function setUrl($url) {
       $this->url = $this->addProtocol($url);
-   }
-
-   /**
-    * Check whether a remote page exists or not.
-    * To be used before Page::getTitle and Page::getDescription to male sure the wanted page actually exists.
-    * 
-    * @throws \RuntimeException
-    * @return boolean
-    */
-   public function checkExistence() {
-      $headers = @get_headers($this->url);
-      if ($headers === false) {
-         throw new \RuntimeException("A network error occurred");
-      } else {
-         $status = $headers[0];
-         $_200_ = $this->isOKStatusCode($status);
-         $_302_ = $this->isFoundStatusCode($status);
-         if ($_302_) {
-            $this->addPageNote(self::REDIRECT_REQUIRED);
-         }
-         return $_200_;
-      }
    }
 
    public function hasNotes() {
@@ -107,6 +85,29 @@ class Page {
          return false;
       }
       return true;
+   }
+
+   /**
+    * Check whether a remote page exists or not.
+    * 
+    * To be used before Page::getTitle and Page::getDescription to male sure the wanted page actually exists.
+    * 
+    * @throws \RuntimeException
+    * @return boolean
+    */
+   public function checkExistence() {
+      $headers = @get_headers($this->url);
+      if ($headers === false) {
+         throw new \RuntimeException("A network error occurred");
+      } else {
+         $status = $headers[0];
+         $_200_ = $this->isOKStatusCode($status);
+         $_302_ = $this->isFoundStatusCode($status);
+         if ($_302_) {
+            $this->addPageNote(self::REDIRECT_REQUIRED);
+         }
+         return $_200_;
+      }
    }
 
    /**
