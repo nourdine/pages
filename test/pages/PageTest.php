@@ -24,26 +24,26 @@ class PageTest extends PHPUnit_Framework_TestCase {
 
    public function testExisting() {
       $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->doesExist();
+      $bool = $this->page->checkExistence();
       $this->assertTrue($bool);
    }
 
    public function testExistingButNoProtocalSpecified() {
       $this->page->setUrl("pages.ws.local/exist.php");
-      $bool = $this->page->doesExist();
+      $bool = $this->page->checkExistence();
       $this->assertTrue($bool);
    }
 
    public function testRedirecting() {
       $this->page->setUrl(self::REDIRECTING_URL);
-      $bool = $this->page->doesExist();
+      $bool = $this->page->checkExistence();
       $this->assertFalse($bool);
       $this->assertEquals(1, count($this->page->getNotes()));
    }
 
    public function testNonExisting() {
       $this->page->setUrl(self::NON_EXISTING);
-      $bool = $this->page->doesExist();
+      $bool = $this->page->checkExistence();
       $this->assertFalse($bool);
       $this->assertEquals(0, count($this->page->getNotes()));
    }
@@ -53,18 +53,18 @@ class PageTest extends PHPUnit_Framework_TestCase {
     */
    public function testTakingLongTimeToRespond() {
       $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $bool = $this->page->doesExist();
+      $bool = $this->page->checkExistence();
    }
 
-   public function testIsLocationValid() {
+   public function testIsLocationFormallyValid() {
       $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->isLocationValid();
+      $bool = $this->page->isLocationFormallyValid();
       $this->assertTrue($bool);
    }
 
-   public function testIsLocationValidWithQueryString() {
+   public function testIsLocationFormallyValidWithQueryString() {
       $this->page->setUrl(self::EXISTING_URL . "?a=1&b=2");
-      $bool = $this->page->isLocationValid();
+      $bool = $this->page->isLocationFormallyValid();
       $this->assertTrue($bool);
    }
 

@@ -74,7 +74,7 @@ class Page {
     * @throws \RuntimeException
     * @return boolean
     */
-   public function doesExist() {
+   public function checkExistence() {
       $headers = @get_headers($this->url);
       if ($headers === false) {
          throw new \RuntimeException("A network error occurred");
@@ -102,7 +102,7 @@ class Page {
     * 
     * @return boolean
     */
-   public function isLocationValid() {
+   public function isLocationFormallyValid() {
       if (filter_var($this->url, FILTER_VALIDATE_URL) === false) {
          return false;
       }

@@ -6,7 +6,7 @@ $get = function($url) {
       try {
          $page = new \pages\Page($url);
          echo "### Page url " . $url . PHP_EOL;
-         if ($page->doesExist()) {
+         if ($page->checkExistence()) {
             echo "Getting info..." . PHP_EOL;
             echo "Title: " . $page->getTitle() . PHP_EOL;
             echo "Description: " . $page->getDescription() . PHP_EOL;
