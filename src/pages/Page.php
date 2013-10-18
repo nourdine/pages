@@ -3,36 +3,32 @@
 namespace pages;
 
 use regular\Regular;
+use kurl\HttpClient;
 
 class Page {
 
    const REDIRECT_REQUIRED = "302";
 
+   /**
+    * @var \kurl\HttpClient
+    */
+   protected $httpClient = null;
+
+   /**
+    * @var \kurl\Response
+    */
+   protected $response = null;
    protected $url = null;
-   protected $content = null;
    protected $notes = array();
    protected $dictionary = array(
       "302" => "A redirect has been required"
    );
 
-   protected function isFoundStatusCode($str) {
-      return strpos($str, "302") !== false;
-   }
-
-   protected function isOKStatusCode($str) {
-      return strpos($str, "200") !== false;
-   }
-
-   protected function fetchContent() {
-      if ($this->content == null) {
-         $tmp = @file_get_contents($this->url);
-         if ($tmp === false) {
-            throw new \RuntimeException("A network error occurred");
-         } else {
-            $this->content = $tmp;
-         }
+   protected function fetchRemote() {
+      if ($this->response == null) {
+         $this->response = $this->httpClient->fetch("GET", $this->url);
       }
-      return $this->content;
+      return $this->response;
    }
 
    protected function hasProtocol($url) {
@@ -55,6 +51,7 @@ class Page {
    }
 
    public function __construct($url = null, $timeout = 1) {
+      $this->httpClient = new HttpClient($timeout);
       ini_set("default_socket_timeout", $timeout);
       $this->url = $this->addProtocol($url);
    }
@@ -78,6 +75,7 @@ class Page {
    /**
     * Check whether the page url is valid or not.
     * 
+    * @throws \kurl\exception\HttpException
     * @return boolean
     */
    public function isLocationFormallyValid() {
@@ -88,25 +86,18 @@ class Page {
    }
 
    /**
-    * Check whether a remote page exists or not.    * 
-    * To be used before Page::getTitle and Page::getDescription to male sure the wanted page actually exists.
+    * Check whether a remote page exists or not.
+    * To be used before Page::getTitle and Page::getDescription to make sure the wanted page actually exists.
     * 
-    * @throws \RuntimeException
+    * @throws \kurl\exception\HttpException
     * @return boolean
     */
    public function checkExistence() {
-      $headers = @get_headers($this->url);
-      if ($headers === false) {
-         throw new \RuntimeException("A network error occurred");
-      } else {
-         $status = $headers[0];
-         $_200_ = $this->isOKStatusCode($status);
-         $_302_ = $this->isFoundStatusCode($status);
-         if ($_302_) {
-            $this->addPageNote(self::REDIRECT_REQUIRED);
-         }
-         return $_200_;
+      $sc = $this->fetchRemote()->getStatusCode();
+      if ($sc === 302) {
+         $this->addPageNote(self::REDIRECT_REQUIRED);
       }
+      return $sc == 200;
    }
 
    /**
@@ -117,7 +108,7 @@ class Page {
     */
    public function getTitle() {
       $re = new Regular("/<title ?.*>(.*)<\/title>/i");
-      $matches = $re->match($this->fetchContent());
+      $matches = $re->match($this->fetchRemote()->getBody());
       if ($matches->isSuccess()) {
          return trim($matches->getCaptured(0));
       }
@@ -131,7 +122,7 @@ class Page {
     */
    public function getDescription() {
       $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
-      $matches = $re->match($this->fetchContent());
+      $matches = $re->match($this->fetchRemote()->getBody());
       if ($matches->isSuccess()) {
          return trim($matches->getCaptured(0));
       }
