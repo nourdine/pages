@@ -26,7 +26,7 @@ class Page {
 
    protected function fetchRemote() {
       if ($this->response == null) {
-         $this->response = $this->httpClient->fetch("GET", $this->url);
+         $this->response = $this->httpClient->request("GET", $this->url);
       }
       return $this->response;
    }
