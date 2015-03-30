@@ -2,7 +2,7 @@
 
 A library for analysing remote html pages and extract some basic info from them.
 
-### build it
+### Build it
 
 ```cmd
 composer install
@@ -10,13 +10,13 @@ composer install
 
 ### Test it
 
-Assuming you are insed the library folder, let's first start an http server to run the library against:
+(...assuming you are inside the library distribution folder) Let's first start up mini webapp to run the library against:
 
 ```cmd
 php -S localhost:8080 -t ./test/ws
 ```
 
-And then run the actual tests:
+Now that the target webapp is up un running we can actually run our tests:
 
 ```cmd
 phpunit
