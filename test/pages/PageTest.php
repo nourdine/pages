@@ -9,7 +9,7 @@ class PageTest extends PHPUnit_Framework_TestCase {
    const NON_EXISTING = "http://pages.local/not.php";
    const REDIRECTING_URL = "http://pages.local/redirect.php";
    const TAKING_LONG_TIME_URL = "http://pages.local/taking_long_time.php";
-   
+
    /**
     * @var Page
     */
@@ -35,14 +35,8 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertTrue($bool);
    }
 
-   public function testCheckExistence_existing() {
+   public function testCheckExistence() {
       $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->exists();
-      $this->assertTrue($bool);
-   }
-
-   public function testCheckExistence_no_protocol_specified() {
-      $this->page->setUrl(self::EXISTING_URL_NO_PROTOCOL);
       $bool = $this->page->exists();
       $this->assertTrue($bool);
    }
@@ -59,43 +53,47 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->assertEquals("DESCRIPTION", $description);
    }
 
-   /**
-    * @expectedException GuzzleHttp\Exception\RequestException
-    */
-   public function testCheckExistence_non_existing() {
-      $this->page->setUrl(self::NON_EXISTING);
+   public function testCheckExistenceOfPageWithNoSpecifiedProtocol() {
+      $this->page->setUrl(self::EXISTING_URL_NO_PROTOCOL);
       $bool = $this->page->exists();
-      $this->assertFalse($bool);
+      $this->assertTrue($bool);
    }
 
-   public function testCheckExistence_redirecting() {
+   public function testCheckExistenceOfRedirectingPage() {
       $this->page->setUrl(self::REDIRECTING_URL);
       $bool = $this->page->exists();
-      $this->assertFalse($bool);
+      $this->assertTrue($bool);
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
-   public function testCheckExistence_taking_long_time() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $bool = $this->page->exists();
-      $this->assertFalse($bool);
+   public function testCheckExistenceOfNonExistingPage() {
+      $this->page->setUrl(self::NON_EXISTING);
+      $this->page->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
-   public function testGetTitle_taking_long_time() {
+   public function testCheckExistenceOfPageTakingALongTime() {
       $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $title = $this->page->getTitle();
+      $this->page->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
-   public function testGetDescription_taking_long_time() {
+   public function testGetTitleOfPageTakingALongTime() {
       $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $title = $this->page->getDescription();
+      $this->page->getTitle();
+   }
+
+   /**
+    * @expectedException GuzzleHttp\Exception\RequestException
+    */
+   public function testGetDescriptionOfPageTakingALongTime() {
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
+      $this->page->getDescription();
    }
 }

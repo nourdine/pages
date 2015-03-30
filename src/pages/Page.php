@@ -89,8 +89,7 @@ class Page {
    protected function fetchRemote() {
       if ($this->response === null) {
          $this->response = $this->httpClient->get($this->url, [
-             "timeout" => $this->timeout,
-             "allow_redirects" => false
+             "timeout" => $this->timeout
          ]);
       }
       return $this->response;

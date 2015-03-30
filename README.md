@@ -1,6 +1,6 @@
-# pages
+# Pages
 
-A library for analysing remote html pages and extract some basic info from them.
+A library for analysing remote HTML pages and extract some basic info from them.
 
 ### Build it
 
@@ -10,7 +10,7 @@ composer install
 
 ### Test it
 
-Get a virtualhost called `pages.local` poiting at `./test/webapp` and then:
+Get a virtual host called `pages.local` pointing at `./test/webapp` and then run:
 
 ```cmd
 phpunit
