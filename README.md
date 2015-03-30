@@ -13,7 +13,7 @@ composer install
 (...assuming you are inside the library distribution folder) Let's first start up mini webapp to run the library against:
 
 ```cmd
-php -S localhost:8080 -t ./test/ws
+php -S localhost:8080 -t ./test/webapp
 ```
 
 Now that the target webapp is up un running we can actually run our tests:
