@@ -13,7 +13,7 @@
    "require": {
       "php": ">=5.3",
       "nourdine/regular": "dev-master",
-      "nourdine/kurl": "dev-master"
+      "guzzlehttp/guzzle": "~5.0"
    },
    "autoload": {
       "psr-0": {
