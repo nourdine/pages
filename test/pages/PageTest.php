@@ -4,12 +4,12 @@ use pages\Page;
 
 class PageTest extends PHPUnit_Framework_TestCase {
 
-   const EXISTING_URL = "http://localhost:8080/exist.php";
-   const EXISTING_URL_NO_PROTOCOL = "localhost:8080/exist.php";
-   const NON_EXISTING = "http://localhost:8080/not.php";
-   const REDIRECTING_URL = "http://localhost:8080/redirect.php";
-   const TAKING_LONG_TIME_URL = "http://localhost:8080/taking_long_time.php";
-
+   const EXISTING_URL = "http://pages.local/exist.php";
+   const EXISTING_URL_NO_PROTOCOL = "pages.local/exist.php";
+   const NON_EXISTING = "http://pages.local/not.php";
+   const REDIRECTING_URL = "http://pages.local/redirect.php";
+   const TAKING_LONG_TIME_URL = "http://pages.local/taking_long_time.php";
+   
    /**
     * @var Page
     */

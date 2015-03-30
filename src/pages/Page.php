@@ -3,7 +3,6 @@
 namespace pages;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 use regular\Regular;
@@ -17,7 +16,7 @@ class Page {
    protected $response = null;
    protected $url = null;
 
-   public function __construct($url = null, $timeout = 1) {
+   public function __construct($url = null, $timeout = 0.5) {
       $this->timeout = $timeout;
       $this->url = $this->addProtocol($url);
       $this->httpClient = new Client();
