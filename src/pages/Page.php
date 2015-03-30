@@ -81,7 +81,8 @@ class Page {
    }
 
    /**
-    * Fetch the page if not already retrieved.
+    * Fetch the page if not already retrieved. The http call follows the riderect headers sent by the server.
+    * @see http://guzzle.readthedocs.org/en/latest/quickstart.html#redirects
     * 
     * @throws RequestException
     * @return Response
