@@ -9,8 +9,6 @@ use regular\Regular;
 
 class Page {
 
-   const REDIRECT_REQUIRED = "302";
-
    protected $timeout;
    protected $httpClient = null;
    protected $response = null;
