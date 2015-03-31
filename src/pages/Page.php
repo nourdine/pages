@@ -13,6 +13,8 @@ class Page {
    protected $httpClient = null;
    protected $response = null;
    protected $url = null;
+   protected $redirected;
+   protected $finalUrl;
 
    public function __construct($url = null, $timeout = 0.5) {
       $this->timeout = $timeout;
@@ -26,6 +28,23 @@ class Page {
 
    public function setUrl($url) {
       $this->url = $this->addProtocol($url);
+   }
+
+   /**
+    * Check if the there have been redirections on the way to the declared url.
+    * 
+    * @return boolean
+    */
+   public function hasBeenRedirected() {
+      return $this->redirected;
+   }
+
+   /**
+    * Return the final url reached after redirections. If no redirections have been applied, then this is equal to the declared url.
+    * @return string
+    */
+   public function getFinalUrl() {
+      return $this->finalUrl;
    }
 
    /**
@@ -90,6 +109,10 @@ class Page {
          $this->response = $this->httpClient->get($this->url, [
              "timeout" => $this->timeout
          ]);
+         $this->finalUrl = $this->response->getEffectiveUrl();
+         if ($this->finalUrl !== $this->url) {
+            $this->redirected = true;
+         }
       }
       return $this->response;
    }

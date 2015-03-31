@@ -25,20 +25,17 @@ class PageTest extends PHPUnit_Framework_TestCase {
 
    public function testIsLocationFormallyValid() {
       $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->isLocationFormallyValid();
-      $this->assertTrue($bool);
+      $this->assertTrue($this->page->isLocationFormallyValid());
    }
 
    public function testIsLocationFormallyValidWithQueryString() {
       $this->page->setUrl(self::EXISTING_URL . "?a=1&b=2");
-      $bool = $this->page->isLocationFormallyValid();
-      $this->assertTrue($bool);
+      $this->assertTrue($this->page->isLocationFormallyValid());
    }
 
    public function testCheckExistence() {
       $this->page->setUrl(self::EXISTING_URL);
-      $bool = $this->page->exists();
-      $this->assertTrue($bool);
+      $this->assertTrue($this->page->exists());
    }
 
    public function testGetTitle() {
@@ -55,14 +52,15 @@ class PageTest extends PHPUnit_Framework_TestCase {
 
    public function testCheckExistenceOfPageWithNoSpecifiedProtocol() {
       $this->page->setUrl(self::EXISTING_URL_NO_PROTOCOL);
-      $bool = $this->page->exists();
-      $this->assertTrue($bool);
+      $this->assertTrue($this->page->exists());
+      $this->assertEquals($this->page->getFinalUrl(), "http://" . self::EXISTING_URL_NO_PROTOCOL);
    }
 
    public function testCheckExistenceOfRedirectingPage() {
       $this->page->setUrl(self::REDIRECTING_URL);
-      $bool = $this->page->exists();
-      $this->assertTrue($bool);
+      $this->assertTrue($this->page->exists());
+      $this->assertTrue($this->page->hasBeenRedirected());
+      $this->assertEquals($this->page->getFinalUrl(), self::EXISTING_URL);
    }
 
    /**
