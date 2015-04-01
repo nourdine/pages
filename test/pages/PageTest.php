@@ -25,26 +25,26 @@ class PageTest extends PHPUnit_Framework_TestCase {
 
    public function testCheckExistence() {
       $this->page->setUrl(self::EXISTING_URL);
-      $this->assertTrue($this->page->exists());
+      $this->assertTrue($this->page->fetch()->exists());
    }
 
    public function testGetTitle() {
       $this->page->setUrl(self::EXISTING_URL);
-      $title = $this->page->getTitle();
+      $title = $this->page->fetch()->getTitle();
       $this->assertEquals("TITLE", $title);
    }
 
    public function testGetDescription() {
       $this->page->setUrl(self::EXISTING_URL);
-      $description = $this->page->getDescription();
+      $description = $this->page->fetch()->getDescription();
       $this->assertEquals("DESCRIPTION", $description);
    }
 
    public function testCheckExistenceOfRedirectingPage() {
       $this->page->setUrl(self::REDIRECTING_URL);
-      $this->assertTrue($this->page->exists());
-      $this->assertTrue($this->page->hasBeenRedirected());
-      $this->assertEquals($this->page->getFinalUrl(), self::EXISTING_URL);
+      $this->assertTrue($this->page->fetch()->exists());
+      $this->assertTrue($this->page->fetch()->hasBeenRedirected());
+      $this->assertEquals($this->page->fetch()->getFinalUrl(), self::EXISTING_URL);
    }
 
    /**
@@ -52,30 +52,27 @@ class PageTest extends PHPUnit_Framework_TestCase {
     */
    public function testCheckExistenceOfNonExistingPage() {
       $this->page->setUrl(self::NON_EXISTING);
-      $this->page->exists();
+      $this->page->fetch()->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testCheckExistenceOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $this->page->exists();
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testGetTitleOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $this->page->getTitle();
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->getTitle();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testGetDescriptionOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL);
-      $this->page->getDescription();
+      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->getDescription();
    }
 }

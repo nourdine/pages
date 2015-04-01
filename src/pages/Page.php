@@ -28,6 +28,7 @@ class Page {
 
    public function setUrl($url) {
       $this->url = $url;
+      return $this;
    }
 
    /**
@@ -54,7 +55,7 @@ class Page {
     * @return boolean
     */
    public function exists() {
-      return 200 === $this->fetchRemote()->getStatusCode();
+      return 200 === $this->response->getStatusCode();
    }
 
    /**
@@ -65,7 +66,7 @@ class Page {
     */
    public function getTitle() {
       $re = new Regular("/<title ?.*>(.*)<\/title>/i");
-      $matches = $re->match($this->fetchRemote()->getBody());
+      $matches = $re->match($this->response->getBody());
       if ($matches->isSuccess()) {
          return trim($matches->getCaptured(0)->getValue());
       }
@@ -79,7 +80,7 @@ class Page {
     */
    public function getDescription() {
       $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
-      $matches = $re->match($this->fetchRemote()->getBody());
+      $matches = $re->match($this->response->getBody());
       if ($matches->isSuccess()) {
          return trim($matches->getCaptured(0)->getValue());
       }
@@ -92,7 +93,7 @@ class Page {
     * @throws RequestException
     * @return Response
     */
-   protected function fetchRemote() {
+   public function fetch() {
       if ($this->response === null) {
          $this->response = $this->httpClient->get($this->url, [
              "timeout" => $this->timeout
@@ -102,6 +103,6 @@ class Page {
             $this->redirected = true;
          }
       }
-      return $this->response;
+      return $this;
    }
 }
