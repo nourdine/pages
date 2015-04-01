@@ -18,7 +18,7 @@ class Page {
 
    public function __construct($url = null, $timeout = 0.5) {
       $this->timeout = $timeout;
-      $this->url = $this->addProtocol($url);
+      $this->url = $url;
       $this->httpClient = new Client();
    }
 
@@ -27,7 +27,7 @@ class Page {
    }
 
    public function setUrl($url) {
-      $this->url = $this->addProtocol($url);
+      $this->url = $url;
    }
 
    /**
@@ -45,18 +45,6 @@ class Page {
     */
    public function getFinalUrl() {
       return $this->finalUrl;
-   }
-
-   /**
-    * Check whether the page url is valid or not.
-    * 
-    * @return boolean
-    */
-   public function isLocationFormallyValid() {
-      if (filter_var($this->url, FILTER_VALIDATE_URL) === false) {
-         return false;
-      }
-      return true;
    }
 
    /**
@@ -115,20 +103,5 @@ class Page {
          }
       }
       return $this->response;
-   }
-
-   protected function hasProtocol($url) {
-      if (strpos($url, "http://") === 0 ||
-              strpos($url, "https://") === 0) {
-         return true;
-      }
-      return false;
-   }
-
-   protected function addProtocol($url) {
-      if (!$this->hasProtocol($url)) {
-         $url = "http://" . $url;
-      }
-      return $url;
    }
 }

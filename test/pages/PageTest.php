@@ -23,16 +23,6 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->page = null;
    }
 
-   public function testIsLocationFormallyValid() {
-      $this->page->setUrl(self::EXISTING_URL);
-      $this->assertTrue($this->page->isLocationFormallyValid());
-   }
-
-   public function testIsLocationFormallyValidWithQueryString() {
-      $this->page->setUrl(self::EXISTING_URL . "?a=1&b=2");
-      $this->assertTrue($this->page->isLocationFormallyValid());
-   }
-
    public function testCheckExistence() {
       $this->page->setUrl(self::EXISTING_URL);
       $this->assertTrue($this->page->exists());
@@ -48,12 +38,6 @@ class PageTest extends PHPUnit_Framework_TestCase {
       $this->page->setUrl(self::EXISTING_URL);
       $description = $this->page->getDescription();
       $this->assertEquals("DESCRIPTION", $description);
-   }
-
-   public function testCheckExistenceOfPageWithNoSpecifiedProtocol() {
-      $this->page->setUrl(self::EXISTING_URL_NO_PROTOCOL);
-      $this->assertTrue($this->page->exists());
-      $this->assertEquals($this->page->getFinalUrl(), "http://" . self::EXISTING_URL_NO_PROTOCOL);
    }
 
    public function testCheckExistenceOfRedirectingPage() {
