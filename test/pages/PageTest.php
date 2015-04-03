@@ -31,7 +31,7 @@ class PageTest extends PHPUnit_Framework_TestCase {
    public function testGetTitle() {
       $this->page->setUrl(self::EXISTING_URL);
       $title = $this->page->fetch()->getTitle();
-      $this->assertEquals("TITLE", $title);
+      $this->assertEquals("TITLE & MORE", $title);
    }
 
    public function testGetDescription() {

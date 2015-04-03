@@ -68,7 +68,7 @@ class Page {
       $re = new Regular("/<title ?.*>([\s\S]*)<\/title>/i");
       $matches = $re->match($this->response->getBody());
       if ($matches->isSuccess()) {
-         return trim($matches->getCaptured(0)->getValue());
+         return html_entity_decode(trim($matches->getCaptured(0)->getValue()));
       }
    }
 
@@ -82,7 +82,7 @@ class Page {
       $re = new Regular('/<meta name="description".{0,}content="([^"]{1,})"\s{0,}\/{0,1}>/i');
       $matches = $re->match($this->response->getBody());
       if ($matches->isSuccess()) {
-         return trim($matches->getCaptured(0)->getValue());
+         return html_entity_decode(trim($matches->getCaptured(0)->getValue()));
       }
    }
 
