@@ -65,7 +65,7 @@ class Page {
     * @return string|null
     */
    public function getTitle() {
-      $re = new Regular("/<title ?.*>(.*)<\/title>/i");
+      $re = new Regular("/<title ?.*>([\s\S]*)<\/title>/i");
       $matches = $re->match($this->response->getBody());
       if ($matches->isSuccess()) {
          return trim($matches->getCaptured(0)->getValue());
