@@ -87,6 +87,16 @@ class Page {
    }
 
    /**
+    * Fetch the whole page's HTML source code. 
+    * 
+    * @throws RequestException
+    * @return string
+    */
+   public function getHTML() {
+      return $this->response->getBody();
+   }
+
+   /**
     * Fetch the page if not already retrieved. The http call follows the riderect headers sent by the server.
     * @see http://guzzle.readthedocs.org/en/latest/quickstart.html#redirects
     * 
