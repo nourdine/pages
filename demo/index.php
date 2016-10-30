@@ -1,18 +1,21 @@
 <?php
 
-include_once '../vendor/autoload.php';
+use pages\Page;
+
+include_once __DIR__ . '/../vendor/autoload.php';
 
 $get = function($url) {
    try {
-      $page = new \pages\Page($url, 3);
+      $page = new Page($url, 3);
       echo "Url: " . $url . PHP_EOL;
+      $page->fetch();
       if ($page->exists()) {
          echo "Title: " . $page->getTitle() . PHP_EOL;
          echo "Description: " . $page->getDescription() . PHP_EOL;
       } else {
          echo "Page not found." . PHP_EOL;
       }
-   } catch (\RuntimeException $ex) {
+   } catch (RuntimeException $ex) {
       echo $ex->getMessage() . PHP_EOL;
    }
    echo PHP_EOL . PHP_EOL;
