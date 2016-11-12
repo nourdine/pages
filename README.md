@@ -10,7 +10,7 @@ composer install
 
 ### Test it
 
-Get a virtual host called `pages.local` pointing at `./test/webapp` and then run:
+Set a virtual host called `pages.local` pointing at `./test/webapp` and then run:
 
 ```cmd
 phpunit

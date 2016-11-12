@@ -16,7 +16,7 @@ class Page {
    protected $redirected;
    protected $finalUrl;
 
-   public function __construct($url = null, $timeout = 0.5) {
+   public function __construct(string $url, float $timeout = 0.5) {
       $this->timeout = $timeout;
       $this->url = $url;
       $this->httpClient = new Client();
@@ -24,11 +24,6 @@ class Page {
 
    public function getUrl() {
       return $this->url;
-   }
-
-   public function setUrl($url) {
-      $this->url = $url;
-      return $this;
    }
 
    /**

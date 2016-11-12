@@ -10,69 +10,59 @@ class PageTest extends PHPUnit_Framework_TestCase {
    const REDIRECTING_URL = "http://pages.local/redirect.php";
    const TAKING_LONG_TIME_URL = "http://pages.local/taking_long_time.php";
 
-   /**
-    * @var Page
-    */
-   protected $page = null;
-
-   public function setUp() {
-      $this->page = new Page();
-   }
-
-   public function tearDown() {
-      $this->page = null;
-   }
-
    public function testCheckExistence() {
-      $this->page->setUrl(self::EXISTING_URL);
-      $this->assertTrue($this->page->fetch()->exists());
+      $page = new Page(self::EXISTING_URL);
+      $this->assertTrue($page->fetch()->exists());
    }
 
    public function testGetTitle() {
-      $this->page->setUrl(self::EXISTING_URL);
-      $title = $this->page->fetch()->getTitle();
+      $page = new Page(self::EXISTING_URL);
+      $title = $page->fetch()->getTitle();
       $this->assertEquals("TITLE & MORE", $title);
    }
 
    public function testGetDescription() {
-      $this->page->setUrl(self::EXISTING_URL);
-      $description = $this->page->fetch()->getDescription();
+      $page = new Page(self::EXISTING_URL);
+      $description = $page->fetch()->getDescription();
       $this->assertEquals("DESCRIPTION", $description);
    }
 
    public function testCheckExistenceOfRedirectingPage() {
-      $this->page->setUrl(self::REDIRECTING_URL);
-      $this->assertTrue($this->page->fetch()->exists());
-      $this->assertTrue($this->page->fetch()->hasBeenRedirected());
-      $this->assertEquals($this->page->fetch()->getFinalUrl(), self::EXISTING_URL);
+      $page = new Page(self::REDIRECTING_URL);
+      $this->assertTrue($page->fetch()->exists());
+      $this->assertTrue($page->fetch()->hasBeenRedirected());
+      $this->assertEquals($page->fetch()->getFinalUrl(), self::EXISTING_URL);
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testCheckExistenceOfNonExistingPage() {
-      $this->page->setUrl(self::NON_EXISTING);
-      $this->page->fetch()->exists();
+      $page = new Page(self::NON_EXISTING);
+      $page->fetch()->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testCheckExistenceOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->exists();
+      $page = new Page(self::TAKING_LONG_TIME_URL);
+      $page->fetch()->exists();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testGetTitleOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->getTitle();
+      $page = new Page(self::TAKING_LONG_TIME_URL);
+      $page->fetch()->getTitle();
    }
 
    /**
     * @expectedException GuzzleHttp\Exception\RequestException
     */
    public function testGetDescriptionOfPageTakingALongTime() {
-      $this->page->setUrl(self::TAKING_LONG_TIME_URL)->fetch()->getDescription();
+      $page = new Page(self::TAKING_LONG_TIME_URL);
+      $page->fetch()->getDescription();
    }
 }
