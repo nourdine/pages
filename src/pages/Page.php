@@ -10,9 +10,9 @@ use regular\Regular;
 class Page {
 
    protected $timeout;
-   protected $httpClient = null;
-   protected $response = null;
-   protected $url = null;
+   protected $httpClient;
+   protected $response;
+   protected $url;
    protected $redirected;
    protected $finalUrl;
 
