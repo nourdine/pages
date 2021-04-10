@@ -8,8 +8,6 @@ A library for analysing remote HTML pages and extract some basic info from them.
 composer require nourdine/pages
 ```
 
-### Developement [this is section is for me ;)]
-
 ### Build it
 
 ```cmd
